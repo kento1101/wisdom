@@ -8,7 +8,7 @@ php artisan serve
 php artisan make:controller HelloController
 
 //ルーティング
-Route::get('hello','HelloController@index')
+Route::get('hello','HelloController@index');
 
 //アクションの追加
 public function index () {
@@ -17,9 +17,98 @@ public function index () {
 
 //パラメータの利用（任意パラメータ）
 ・ルーティング
-Route::get('hello/{id?}/{pass?}','HelloController@index')
+Route::get('hello/{id?}/{pass?}','HelloController@index');
 
 ・コントローラ
-public function index ($id='noname',$pass='nukown') {
+public function index ($id='noname',$pass='unknown') {
   処理
 }
+
+//シングルアクションコントローラ
+・ルーティング
+Route::get('hello','HelloController');
+
+・コントローラ
+public function __invoke () {
+  処理
+}
+
+//RequestとResponseの利用
+public function index (Request $request,Response $response) {
+  処理
+}
+
+//リクエストの主なメソッド
+・アクセスしたURL
+$request->url();
+
+・完全なアドレス
+$request->fullUrl();
+
+・ドメイン以下のパス
+$request->path();
+
+
+//レスポンスの主なメソッド
+・ステータスコード
+$this->status();
+
+//テンプレートの利用
+public function index () {
+  return view('hello.index');
+}
+
+//値をテンプレートに渡す
+public function index () {
+  $data =['msg'=>'メッセージ']; //連想配列
+  return view('hello.index',$data);
+}
+
+return view(テンプレート,配列);
+
+//ルートパラメータをテンプレートに渡す
+・ルーティング
+Route::get('hello/{id?}','HelloController@index');
+
+・コントローラ
+public function index ($id='zero') {
+  $data =[
+    'msg'=>'メッセージ',
+    'id'=>$id
+    ];
+  return view('hello.index',$data);
+}
+
+//ルートパラメータをテンプレートに渡す２
+・ルーティング
+Route::get('hello','HelloController@index');
+
+・コントローラ
+public function index (Request $request) {
+  $data =[
+    'msg'=>'メッセージ',
+    'id'=>$request->id
+    ];
+  return view('hello.index',$data);
+}
+
+//フォームの送信
+ルーティング
+Route::post('hello','HelloController@post');
+
+コントローラ
+public function post (Request $request) {
+    $msg=$request->msg;
+    $data=[
+     'msg'=>'こんにちは、'. $msg .'さん!',
+    ];
+    return view('hello.index',$data);
+}
+
+ビュー
+<form method="POST" action="/hello">
+  @csrf
+  <input type="text" name="msg">
+  <input type="submit">
+</form>
+
