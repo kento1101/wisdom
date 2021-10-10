@@ -112,3 +112,52 @@ public function post (Request $request) {
   <input type="submit">
 </form>
 
+
+//if構文
+@if （条件）
+　　出力内容
+@elseif （条件）
+　　出力内容
+@else （条件）
+　　出力内容
+@endif
+
+//繰り返し構文
+@foreach （$配列　as $変数）
+　　繰り返す表示
+@endforeach
+
+
+//@sectionと@yield
+
+@section（名前）
+　表示内容
+@endsection
+
+@yield（名前）
+
+//バリデーション
+public function post (Request $request) {
+    $validate_rule =[
+      'name'=>'required',
+      'mail'=>'email',
+      'age'=>'numeric|between:0,150',
+    ];
+     $this->validate($request,$validate_rule);
+    return view('hello.index',['msg'=>'正しく入力されました']);
+}
+
+//エラーメッセージ
+@error(名前)
+　$messageでメッセージを表示
+@enderror
+
+
+//モデルの作成
+php artisan make:model Person
+
+//Personモデルの全レコードを得る
+$items = Person::all();
+
+//idによるレコード検索
+$変数 = モデルクラス::find(整数);
